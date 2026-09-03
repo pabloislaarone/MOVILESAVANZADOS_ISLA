@@ -5,12 +5,14 @@ enum TipoUsuario {
     case alumno
     case docente
     case administrador
+    case coordinador // Nuevo rol asignado
 
     var diasPermitidos: Int {
         switch self {
         case .alumno: return 7
         case .docente: return 15
         case .administrador: return 10
+        case .coordinador: return 15
         }
     }
 
@@ -19,6 +21,7 @@ enum TipoUsuario {
         case .alumno: return 1.50
         case .docente: return 2.00
         case .administrador: return 3.00
+        case .coordinador: return 4.00
         }
     }
 }
@@ -118,17 +121,19 @@ func leerOpcionUsuario() -> TipoUsuario {
         print("1. Alumno        (+7 días límite  | S/ 1.50 tarifa base)")
         print("2. Docente       (+15 días límite | S/ 2.00 tarifa base)")
         print("3. Administrador (+10 días límite | S/ 3.00 tarifa base)")
-        print("Opción (1-3):", terminator: " ")
+        print("4. Coordinador   (+15 días límite | S/ 4.00 tarifa base)")
+        print("Opción (1-4):", terminator: " ")
         if let entrada = readLine(), let opcion = Int(entrada) {
             switch opcion {
             case 1: return .alumno
             case 2: return .docente
             case 3: return .administrador
+            case 4: return .coordinador
             default: break
             }
         }
         print("--------------------------------------------------")
-        print("Error: Ingrese únicamente 1, 2 o 3.")
+        print("Error: Ingrese únicamente 1, 2, 3 o 4.")
         print("--------------------------------------------------")
     }
 }
@@ -141,7 +146,6 @@ func leerFechaConBarras(etiqueta: String) -> Date {
         
         let partes = entrada.split(separator: "/")
         
-        // Verifica que la estructura contenga tres partes y 4 dígitos en el año
         guard partes.count == 3,
               let dia = Int(partes[0]),
               let mes = Int(partes[1]),
@@ -158,7 +162,6 @@ func leerFechaConBarras(etiqueta: String) -> Date {
         componentes.month = mes
         componentes.year = año
 
-        // Verificación de calendario real (febrero bisiesto, meses de 30 o 31 días)
         if let fecha = calendario.date(from: componentes),
            calendario.component(.day, from: fecha) == dia,
            calendario.component(.month, from: fecha) == mes {
@@ -166,7 +169,6 @@ func leerFechaConBarras(etiqueta: String) -> Date {
         } else {
             print("--------------------------------------------------")
             print("Error: Fecha inexistente en el calendario real.")
-            print("Verifique los días según el mes (ej. febrero 28/29 días, abril 30).")
             print("--------------------------------------------------")
         }
     }
