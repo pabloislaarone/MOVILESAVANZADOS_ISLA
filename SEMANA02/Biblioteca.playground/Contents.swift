@@ -5,7 +5,7 @@ enum TipoUsuario {
     case alumno
     case docente
     case administrador
-    case coordinador // Nuevo rol asignado
+    case coordinador
 
     var diasPermitidos: Int {
         switch self {
@@ -76,8 +76,10 @@ struct Prestamo {
                 var tarifaDia = tipoUsuario.tarifaBase
 
                 if dia >= 4 && dia <= 6 {
+                    tarifaDia *= 1.20
+                } else if dia >= 7 && dia <= 10 {
                     tarifaDia *= 1.50
-                } else if dia >= 7 {
+                } else if dia >= 11 {
                     tarifaDia *= 2.00
                 }
 
@@ -89,7 +91,7 @@ struct Prestamo {
         }
 
         let estado = retraso == 0 ? "Devuelto sin atraso" : "Devuelto con atraso (\(retraso) días)"
-        let situacion = retraso > 10 ? "Usuario suspendido para futuros préstamos" : "Usuario habilitado"
+        let situacion = retraso > 20 ? "Usuario suspendido para futuros préstamos" : "Usuario habilitado"
 
         print("\n==================================================")
         print("                RESULTADOS FINALES                ")
@@ -101,7 +103,7 @@ struct Prestamo {
     }
 }
 
-// --- 3. FUNCIONES DE VALIDACIÓN CON FORMATO DD/MM/YYYY ---
+// --- 3. FUNCIONES DE VALIDACIÓN CON FORMATO DD/MM/YYYY Y FECHA ACTUAL ---
 
 func leerTextoValidado(mensaje: String) -> String {
     while true {
@@ -176,6 +178,11 @@ func leerFechaConBarras(etiqueta: String) -> Date {
 
 // --- 4. EJECUCIÓN PRINCIPAL ---
 
+let calendario = Calendar.current
+let dfHoy = DateFormatter()
+dfHoy.dateFormat = "dd/MM/yyyy"
+let hoyInicio = calendario.startOfDay(for: Date())
+
 print("==================================================")
 print("     SISTEMA DE GESTIÓN DE PRÉSTAMOS DE LIBROS    ")
 print("==================================================")
@@ -186,17 +193,33 @@ print("--------------------------------------------------")
 let usuario = leerOpcionUsuario()
 print("--------------------------------------------------")
 
-let fechaPrestamo = leerFechaConBarras(etiqueta: "Fecha de Préstamo")
-print("--------------------------------------------------")
-
-var fechaDevolucion: Date
+// Validación de Fecha de Préstamo (Igual o posterior al día de hoy)
+var fechaPrestamo: Date
 while true {
-    fechaDevolucion = leerFechaConBarras(etiqueta: "Fecha de Devolución Real")
-    if fechaDevolucion >= fechaPrestamo {
+    fechaPrestamo = leerFechaConBarras(etiqueta: "Fecha de Préstamo")
+    let prestamoInicio = calendario.startOfDay(for: fechaPrestamo)
+
+    if prestamoInicio >= hoyInicio {
         break
     }
     print("--------------------------------------------------")
-    print("Error: La fecha de devolución no puede ser anterior al préstamo.")
+    print("Error: La fecha de préstamo no puede ser anterior a hoy (\(dfHoy.string(from: Date()))).")
+    print("--------------------------------------------------")
+}
+print("--------------------------------------------------")
+
+// Validación de Fecha de Devolución (Igual o posterior a la fecha de préstamo)
+var fechaDevolucion: Date
+while true {
+    fechaDevolucion = leerFechaConBarras(etiqueta: "Fecha de Devolución Real")
+    let devolucionInicio = calendario.startOfDay(for: fechaDevolucion)
+    let prestamoInicio = calendario.startOfDay(for: fechaPrestamo)
+
+    if devolucionInicio >= prestamoInicio {
+        break
+    }
+    print("--------------------------------------------------")
+    print("Error: La fecha de devolución no puede ser anterior a la fecha de préstamo.")
     print("--------------------------------------------------")
 }
 
@@ -207,4 +230,4 @@ let miPrestamo = Prestamo(
     fechaDevolucion: fechaDevolucion
 )
 
-miPrestamo.procesarYMostrarReporte()
+miPrestamo.procesarYMostrarReporte()
