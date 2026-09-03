@@ -45,23 +45,27 @@ struct Prestamo {
     func procesarYMostrarReporte() {
         let calendario = Calendar.current
         let df = DateFormatter()
-        df.dateFormat = "dd/MM/yy"
+        df.dateFormat = "dd/MM/yyyy"
 
-        print("\n==========================================")
-        print("         INFORMACIÓN DEL PRÉSTAMO         ")
-        print("==========================================")
-        print("📘 Título del libro: \(tituloLibro)")
-        print("👤 Tipo de usuario: \(tipoUsuario)")
-        print("📅 Fecha de préstamo: \(df.string(from: fechaPrestamo))")
-        print("⏰ Fecha límite (Automática): \(df.string(from: fechaLimite))")
-        print("📥 Fecha real de devolución: \(df.string(from: fechaDevolucion))")
+        print("\n==================================================")
+        print("            INFORMACIÓN DEL PRÉSTAMO              ")
+        print("==================================================")
+        print("Título del libro            : \(tituloLibro)")
+        print("Tipo de usuario             : \(tipoUsuario)")
+        print("Fecha de préstamo           : \(df.string(from: fechaPrestamo))")
+        print("Fecha límite (Automática)   : \(df.string(from: fechaLimite))")
+        print("Fecha real de devolución    : \(df.string(from: fechaDevolucion))")
+        print("--------------------------------------------------")
 
         let retraso = diasAtraso
         var multaTotal = 0.0
 
         if retraso > 0 {
-            print("\n--- CALENDARIO DE MULTAS DIARIAS ---")
-            print("DIA\tFECHA\t\tMULTA DIAS\tACUMULA")
+            print("\n--------------------------------------------------")
+            print("           CALENDARIO DE MULTAS DIARIAS           ")
+            print("--------------------------------------------------")
+            print("DÍA\tFECHA\t\tMULTA DÍA\tACUMULADO")
+            print("--------------------------------------------------")
 
             let limiteInicio = calendario.startOfDay(for: fechaLimite)
 
@@ -69,9 +73,9 @@ struct Prestamo {
                 var tarifaDia = tipoUsuario.tarifaBase
 
                 if dia >= 4 && dia <= 6 {
-                    tarifaDia *= 1.50 // Base + 50%
+                    tarifaDia *= 1.50
                 } else if dia >= 7 {
-                    tarifaDia *= 2.00 // Base + 100%
+                    tarifaDia *= 2.00
                 }
 
                 multaTotal += tarifaDia
@@ -84,92 +88,114 @@ struct Prestamo {
         let estado = retraso == 0 ? "Devuelto sin atraso" : "Devuelto con atraso (\(retraso) días)"
         let situacion = retraso > 10 ? "Usuario suspendido para futuros préstamos" : "Usuario habilitado"
 
-        print("\n==========================================")
-        print("            RESULTADOS FINALES            ")
-        print("==========================================")
-        print("💰 Multa Total: S/ \(String(format: "%.2f", multaTotal))")
-        print("📋 Estado: \(estado)")
-        print("⚠️  Situación: \(situacion)")
-        print("==========================================")
+        print("\n==================================================")
+        print("                RESULTADOS FINALES                ")
+        print("==================================================")
+        print("Multa Total                 : S/ \(String(format: "%.2f", multaTotal))")
+        print("Estado                      : \(estado)")
+        print("Situación                   : \(situacion)")
+        print("==================================================\n")
     }
 }
 
-// --- 3. FUNCIONES DE VALIDACIÓN Y RESTRICCIONES REALISTAS ---
+// --- 3. FUNCIONES DE VALIDACIÓN CON FORMATO DD/MM/YYYY ---
 
-// Lee exclusivamente números enteros dentro de un rango
-func leerNumeroValidado(mensaje: String, min: Int, max: Int) -> Int {
-    while true {
-        print(mensaje, terminator: " ")
-        if let entrada = readLine(), let numero = Int(entrada), numero >= min && numero <= max {
-            return numero
-        }
-        print("❌ Entrada inválida. Ingrese únicamente un número entero entre \(min) y \(max).")
-    }
-}
-
-// Garatiza que el texto no se envíe vacío
 func leerTextoValidado(mensaje: String) -> String {
     while true {
-        print(mensaje)
+        print(mensaje, terminator: " ")
         if let entrada = readLine()?.trimmingCharacters(in: .whitespacesAndNewlines), !entrada.isEmpty {
             return entrada
         }
-        print("❌ El título no puede estar vacío.")
+        print("--------------------------------------------------")
+        print("Error: El título del libro no puede quedar vacío.")
+        print("--------------------------------------------------")
     }
 }
 
-// Garantiza la existencia real de la fecha en el calendario
-func leerFechaValidada(mensajeHeader: String) -> Date {
+func leerOpcionUsuario() -> TipoUsuario {
+    while true {
+        print("Seleccione Tipo de Usuario:")
+        print("1. Alumno        (+7 días límite  | S/ 1.50 tarifa base)")
+        print("2. Docente       (+15 días límite | S/ 2.00 tarifa base)")
+        print("3. Administrador (+10 días límite | S/ 3.00 tarifa base)")
+        print("Opción (1-3):", terminator: " ")
+        if let entrada = readLine(), let opcion = Int(entrada) {
+            switch opcion {
+            case 1: return .alumno
+            case 2: return .docente
+            case 3: return .administrador
+            default: break
+            }
+        }
+        print("--------------------------------------------------")
+        print("Error: Ingrese únicamente 1, 2 o 3.")
+        print("--------------------------------------------------")
+    }
+}
+
+func leerFechaConBarras(etiqueta: String) -> Date {
     let calendario = Calendar.current
     while true {
-        print("\n--- \(mensajeHeader) ---")
-        let dia = leerNumeroValidado(mensaje: "Día (1-31):", min: 1, max: 31)
-        let mes = leerNumeroValidado(mensaje: "Mes (1-12):", min: 1, max: 12)
-        let año = leerNumeroValidado(mensaje: "Año (ej. 2026):", min: 2026, max: 2100)
+        print("Ingrese \(etiqueta) (Formato DD/MM/YYYY):", terminator: " ")
+        guard let entrada = readLine()?.trimmingCharacters(in: .whitespacesAndNewlines) else { continue }
+        
+        let partes = entrada.split(separator: "/")
+        
+        // Verifica que la estructura contenga tres partes y 4 dígitos en el año
+        guard partes.count == 3,
+              let dia = Int(partes[0]),
+              let mes = Int(partes[1]),
+              let año = Int(partes[2]),
+              partes[2].count == 4 else {
+            print("--------------------------------------------------")
+            print("Error: Use el formato exacto DD/MM/YYYY (ej. 26/04/2026).")
+            print("--------------------------------------------------")
+            continue
+        }
 
         var componentes = DateComponents()
         componentes.day = dia
         componentes.month = mes
         componentes.year = año
 
+        // Verificación de calendario real (febrero bisiesto, meses de 30 o 31 días)
         if let fecha = calendario.date(from: componentes),
-           calendario.component(.day, from: fecha) == dia {
+           calendario.component(.day, from: fecha) == dia,
+           calendario.component(.month, from: fecha) == mes {
             return fecha
+        } else {
+            print("--------------------------------------------------")
+            print("Error: Fecha inexistente en el calendario real.")
+            print("Verifique los días según el mes (ej. febrero 28/29 días, abril 30).")
+            print("--------------------------------------------------")
         }
-        print("❌ Fecha inexistente en el calendario (ej. 30 de febrero). Intente de nuevo.")
     }
 }
 
-// --- 4. EJECUCIÓN INTERACTIVA ---
+// --- 4. EJECUCIÓN PRINCIPAL ---
 
-print("=== SISTEMA REALISTA DE PRÉSTAMOS DE BIBLIOTECA ===")
+print("==================================================")
+print("     SISTEMA DE GESTIÓN DE PRÉSTAMOS DE LIBROS    ")
+print("==================================================")
 
 let tituloInput = leerTextoValidado(mensaje: "Ingrese el título del libro:")
+print("--------------------------------------------------")
 
-print("\nSeleccione Tipo de Usuario:")
-print("1. Alumno (+7 días límite | Tarifa: S/ 1.50)")
-print("2. Docente (+15 días límite | Tarifa: S/ 2.00)")
-print("3. Administrador (+10 días límite | Tarifa: S/ 3.00)")
-let opcionUsuario = leerNumeroValidado(mensaje: "Opción (1-3):", min: 1, max: 3)
+let usuario = leerOpcionUsuario()
+print("--------------------------------------------------")
 
-let usuario: TipoUsuario
-switch opcionUsuario {
-case 2: usuario = .docente
-case 3: usuario = .administrador
-default: usuario = .alumno
-}
+let fechaPrestamo = leerFechaConBarras(etiqueta: "Fecha de Préstamo")
+print("--------------------------------------------------")
 
-// Captura de Fecha de Préstamo
-let fechaPrestamo = leerFechaValidada(mensajeHeader: "FECHA DE PRÉSTAMO")
-
-// Captura de Fecha de Devolución con restricción cronológica
 var fechaDevolucion: Date
 while true {
-    fechaDevolucion = leerFechaValidada(mensajeHeader: "FECHA DE DEVOLUCIÓN REAL")
+    fechaDevolucion = leerFechaConBarras(etiqueta: "Fecha de Devolución Real")
     if fechaDevolucion >= fechaPrestamo {
         break
     }
-    print("❌ Restricción: La fecha de devolución no puede ser anterior a la fecha de préstamo.")
+    print("--------------------------------------------------")
+    print("Error: La fecha de devolución no puede ser anterior al préstamo.")
+    print("--------------------------------------------------")
 }
 
 let miPrestamo = Prestamo(
