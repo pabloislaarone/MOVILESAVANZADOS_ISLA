@@ -1,86 +1,82 @@
-// Desarrollado Pablo Isla Arone
-// Ejercicio 6: Gestión de Notas con IA
-import Foundation
+import UIKit // Importación de la librería UIKit para ejecutar el entorno del Playground.
 
-// Diccionario principal: [NombreAlumno: ArrayDe3Notas]
-var registroNotas: [String: [Double]] = [:]
+let prod1 = "Laptop" // Define el nombre del primer producto en el carrito.
+let precio1 = 3500.0 // Define el precio unitario del primer producto.
+let cant1 = 1 // Define la cantidad a llevar del primer producto.
 
-print("=== GESTIÓN DE NOTAS ===")
-print("¿Cuántos alumnos desea registrar?", terminator: " ")
-let cantidadAlumnos = Int(readLine() ?? "") ?? 0
+let prod2 = "Mouse" // Define el nombre del segundo producto en el carrito.
+let precio2 = 45.50 // Define el precio unitario del segundo producto.
+let cant2 = 2 // Define la cantidad a llevar del segundo producto.
 
-// Registro de alumnos y sus 3 notas
-for i in 1...cantidadAlumnos {
-    print("\nAlumno \(i) - Nombre:", terminator: " ")
-    let nombre = readLine() ?? ""
-    var notasAlumno: [Double] = []
-    
-    for j in 1...3 {
-        print("  Nota \(j):", terminator: " ")
-        let nota = Double(readLine() ?? "") ?? 0.0
-        notasAlumno.append(nota)
-    }
-    
-    registroNotas[nombre] = notasAlumno
-}
+let prod3 = "Teclado" // Define el nombre del tercer producto en el carrito.
+let precio3 = 120.00 // Define el precio unitario del tercer producto.
+let cant3 = 1 // Define la cantidad a llevar del tercer producto.
 
-var listaReporte: [(nombre: String, promedio: Double, estado: String)] = []
-var sumaTotalNotas = 0.0
-var contadorNotasTotales = 0
-var aprobadosCount = 0
+let prod4 = "Monitor" // Define el nombre del cuarto producto en el carrito.
+let precio4 = 890.00 // Define el precio unitario del cuarto producto.
+let cant4 = 1 // Define la cantidad a llevar del cuarto producto.
 
-print("\n===== REPORTE INDIVIDUAL =====")
+let prod5 = "USB Cable" // Define el nombre del quinto producto en el carrito.
+let precio5 = 15.00 // Define el precio unitario del quinto producto.
+let cant5 = 3 // Define la cantidad a llevar del quinto producto.
 
-// Cálculo de promedios y clasificación por alumno
-for (nombre, notas) in registroNotas {
-    let sumaNotas = notas.reduce(0, +)
-    let promedio = notas.count > 0 ? sumaNotas / Double(notas.count) : 0.0
-    
-    sumaTotalNotas += sumaNotas
-    contadorNotasTotales += notas.count
-    
-    var clasificacion = ""
-    
-    // Clasificación según rango de promedio
-    switch promedio {
-    case 18.0...20.0:
-        clasificacion = "Excelente"
-    case 15.0..<18.0:
-        clasificacion = "Bueno"
-    case 13.0..<15.0:
-        clasificacion = "Aprobado"
-    default:
-        clasificacion = "Desaprobado"
-    }
-    
-    if promedio >= 13.0 {
-        aprobadosCount += 1
-    }
-    
-    listaReporte.append((nombre: nombre, promedio: promedio, estado: clasificacion))
-    print("\(nombre) - Notas: \(notas) | Promedio: \(String(format: "%.2f", promedio)) | Estado: \(clasificacion)")
-}
+let datosValidos = precio1 >= 0 && cant1 > 0 && precio2 >= 0 && cant2 > 0 && precio3 >= 0 && cant3 > 0 && precio4 >= 0 && cant4 > 0 && precio5 >= 0 && cant5 > 0 // Valida que ningún precio sea negativo ni cantidad sea cero o menor.
 
-// Estadísticas generales del grupo
-let promedioGeneral = contadorNotasTotales > 0 ? sumaTotalNotas / Double(contadorNotasTotales) : 0.0
-let porcentajeAprobados = registroNotas.count > 0 ? (Double(aprobadosCount) / Double(registroNotas.count)) * 100.0 : 0.0
+if !datosValidos { // Evalúa si existe un error en los datos de entrada.
+    print("Error: Existen precios negativos o cantidades iguales a cero.") // Muestra mensaje de error si la validación falla.
+} else { // Ejecuta el proceso de cobro si los datos son válidos.
 
-print("\n===== ESTADÍSTICAS GENERALES =====")
-print("Promedio General de la clase: \(String(format: "%.2f", promedioGeneral))")
-print("Porcentaje de Aprobados: \(String(format: "%.1f", porcentajeAprobados))%")
+    let descVol1 = cant1 >= 3 ? 0.05 : 0.0 // Aplica 5% de descuento en prod1 si lleva 3 o más unidades.
+    let sub1 = (precio1 * Double(cant1)) * (1.0 - descVol1) // Calcula el subtotal descontado para el producto 1.
 
-// Ordenamiento de lista de mayor a menor promedio
-let listaOrdenada = listaReporte.sorted { $0.promedio > $1.promedio }
+    let descVol2 = cant2 >= 3 ? 0.05 : 0.0 // Aplica 5% de descuento en prod2 si lleva 3 o más unidades.
+    let sub2 = (precio2 * Double(cant2)) * (1.0 - descVol2) // Calcula el subtotal descontado para el producto 2.
 
-if let mejor = listaOrdenada.first {
-    print("Nota/Promedio más alto: \(mejor.nombre) (\(String(format: "%.2f", mejor.promedio)))")
-}
+    let descVol3 = cant3 >= 3 ? 0.05 : 0.0 // Aplica 5% de descuento en prod3 si lleva 3 o más unidades.
+    let sub3 = (precio3 * Double(cant3)) * (1.0 - descVol3) // Calcula el subtotal descontado para el producto 3.
 
-if let peor = listaOrdenada.last {
-    print("Nota/Promedio más bajo: \(peor.nombre) (\(String(format: "%.2f", peor.promedio)))")
-}
+    let descVol4 = cant4 >= 3 ? 0.05 : 0.0 // Aplica 5% de descuento en prod4 si lleva 3 o más unidades.
+    let sub4 = (precio4 * Double(cant4)) * (1.0 - descVol4) // Calcula el subtotal descontado para el producto 4.
 
-print("\n===== ALUMNOS ORDENADOS POR PROMEDIO =====")
-for alumno in listaOrdenada {
-    print("\(alumno.nombre): \(String(format: "%.2f", alumno.promedio)) (\(alumno.estado))")
-}
+    let descVol5 = cant5 >= 3 ? 0.05 : 0.0 // Aplica 5% de descuento en prod5 si lleva 3 o más unidades.
+    let sub5 = (precio5 * Double(cant5)) * (1.0 - descVol5) // Calcula el subtotal descontado para el producto 5.
+
+    let subtotalGeneral = sub1 + sub2 + sub3 + sub4 + sub5 // Calcula la suma total de los subtotales de los productos.
+
+    let cupon = "DESCUENTO20" // Variable con el código del cupón ingresado.
+    var descCupon = 0.0 // Variable que almacenará el porcentaje de descuento por cupón.
+    if cupon == "DESCUENTO20" { // Condicional que verifica si el cupón ingresado es correcto.
+        descCupon = 0.20 // Asigna 20% de descuento adicional al total.
+    } // Cierra la verificación del cupón.
+
+    let subtotalConCupon = subtotalGeneral * (1.0 - descCupon) // Aplica el descuento del cupón al subtotal acumulado.
+    let igv = subtotalConCupon * 0.18 // Calcula el 18% del IGV sobre el subtotal con cupón.
+    let totalParcial = subtotalConCupon + igv // Calcula el costo parcial sumando el impuesto.
+
+    var costoEnvio = 0.0 // Inicializa la variable correspondiente al costo de delivery.
+    if totalParcial > 3000 { // Condicional para validar si el monto califica para envío gratis.
+        costoEnvio = 0.0 // Determina envío gratis si supera los S/. 3000.
+    } else { // Se ejecuta si la compra no alcanza los S/. 3000.
+        costoEnvio = 25.00 // Asigna el costo fijo de envío de S/. 25.00.
+    } // Cierra la evaluación del costo de envío.
+
+    let totalFinal = totalParcial + costoEnvio // Calcula el importe total sumando el costo de envío.
+    let puntosGanados = Int(totalFinal / 100) // Calcula 1 punto acumulado por cada S/. 100 de compra total.
+
+    print("========================================") // Imprime línea divisoria del ticket.
+    print("         CARRITO MEJORADO CON IA") // Muestra el título del comprobante.
+    print("========================================") // Imprime línea divisoria del ticket.
+    print("\(prod1) x\(cant1) = S/. \(sub1)") // Muestra detalle e importe del producto 1.
+    print("\(prod2) x\(cant2) = S/. \(sub2)") // Muestra detalle e importe del producto 2.
+    print("\(prod3) x\(cant3) = S/. \(sub3)") // Muestra detalle e importe del producto 3.
+    print("\(prod4) x\(cant4) = S/. \(sub4)") // Muestra detalle e importe del producto 4.
+    print("\(prod5) x\(cant5) = S/. \(sub5)") // Muestra detalle e importe del producto 5.
+    print("----------------------------------------") // Imprime línea de separación secundaria.
+    print("Subtotal General: S/. \(subtotalGeneral)") // Imprime la suma de los subtotales.
+    print("Subtotal con Cupón: S/. \(subtotalConCupon)") // Imprime el valor con cupón aplicado.
+    print("IGV (18%): S/. \(igv)") // Imprime la cuota por IGV.
+    print("Costo de Envío: S/. \(costoEnvio)") // Imprime el costo de delivery abonado.
+    print("TOTAL FINAL: S/. \(totalFinal)") // Imprime la suma final a cancelar.
+    print("Puntos de fidelidad ganados: \(puntosGanados) pts") // Imprime los puntos ganados por la compra.
+    print("========================================") // Imprime línea divisoria final.
+} // Cierra el bloque condicional principal de validación de datos.
