@@ -1,78 +1,36 @@
-# 🚇 Sistema de Consulta - Metro de Lima
+**Requerimientos Funcionales (RF)**
 
-Aplicación de consola desarrollada en **Swift** que permite a los usuarios consultar e interactuar con la información sobre las estaciones, líneas y conexiones del sistema de transporte de Lima (Línea 1, Línea 2 y Metropolitano).
+* **Campo: Gestión de Red y Transporte Multimodal**
+  * **RF-01 (Cobertura de Red):** Registro de las líneas de tren elevado y subterráneo (Línea 1, Línea 2, Línea 3, Línea 4) y la línea BRT (Metropolitano).
+  * **RF-02 (Estado Operativo):** Clasificación del estado de servicio de cada estación (*En operación*, *En construcción*, *En proyecto*).
+  * **RF-03 (Transbordos e Intersecciones):** Registro explícito de puntos de intercambio entre líneas (ej. *Estación Central*, *La Cultura*, *Carmen de la Legua*, *28 de Julio*).
 
----
+* **Campo: Búsqueda y Navegación**
+  * **RF-04 (Búsqueda de Estaciones):** Localización por coincidencia parcial de texto con insensibilidad a tildes, mayúsculas y espacios.
+  * **RF-05 (Mapeo de Destinos):** Resolución de alias urbanos y puntos de interés clave hacia su estación correspondiente.
+  * **RF-06 (Cálculo de Adyacencia):** Determinación dinámica de la estación inmediata anterior y siguiente según el sentido de la ruta.
 
-## 📋 Requerimientos Funcionales
-
-El proyecto satisface los siguientes requerimientos funcionales:
-
-### 1. Carga e Inicialización de Datos
-* **RF01 - Carga de la red de transporte:** Cargar de forma automática la base de datos local con las estaciones de la Línea 1, Línea 2 y el Metropolitano, detallando disponibilidad, accesibilidad (ascensores), alertas de construcción e interconexiones.
-* **RF02 - Mapeo de destinos populares:** Asociar lugares de interés de la ciudad (como el *Estadio Nacional*) con su estación de transporte pública más cercana o idónea.
-
-### 2. Búsqueda y Consultas
-* **RF03 - Búsqueda interactiva por nombre:** Permitir buscar estaciones mediante coincidencias parciales de texto, soportando variaciones en mayúsculas y minúsculas (case-insensitive).
-* **RF04 - Detalle de estación:** Mostrar la ficha de información técnica de la estación seleccionada, indicando:
-  * Línea a la que pertenece
-  * Estado actual (*Operativa* / *En construcción*)
-  * Disponibilidad de ascensor
-  * Avisos especiales o advertencias
-  * Conexiones o transbordos con otras líneas
-* **RF05 - Recomendación por lugar de destino:** Sugerir la estación correcta al ingresar el nombre de un lugar de interés popular registrado.
-* **RF06 - Filtrado y ordenamiento por línea:** Generar un reporte con todas las estaciones pertenecientes a una línea específica, listadas en orden alfabético y mostrando su estado operativo.
-
-### 3. Interfaz y Experiencia de Usuario
-* **RF07 - Menú interactivo por CLI:** Proveer una navegación mediante menú numérico en bucle continuo hasta que el usuario decida salir.
-* **RF08 - Manejo de errores y mensajes de estado:** Notificar claramente al usuario en caso de ingresar opciones inválidas, realizar búsquedas sin coincidencias o consultar destinos no registrados.
+* **Campo: Visualización y Presentación**
+  * **RF-07 (Modos de Despliegue):** Opción para listar estaciones en orden de recorrido real (terminal a terminal) o en orden alfabético (A-Z).
+  * **RF-08 (Ficha Informativa):** Visualización de metadatos de la estación (línea, color, accesibilidad de ascensor, información/advertencia y conexiones disponibles).
 
 ---
 
-## 🏗️ Modelo de Datos
+**Requerimientos No Funcionales (RNF)**
 
-El programa implementa las siguientes estructuras principales:
+* **Campo: Arquitectura y Entorno**
+  * **RNF-01 (Lenguaje de Desarrollo):** Código fuente nativo implementado en Swift 5+.
+  * **RNF-02 (Interfaz de Usuario):** Interfaz de línea de comandos (CLI) síncrona interactiva.
 
-* **`Conexion`**: Representa un punto de transferencia entre la estación actual y otra línea/estación.
-* **`Estacion`**: Modelo central que almacena el nombre, línea, estado operativo, presencia de ascensor, array de `Conexion` y advertencias de servicio.
-* **`diccionarioEstaciones`**: Diccionario llave-valor (`[String: Estacion]`) para búsquedas rápidas por nombre o identificador.
-* **`destinosPopulares`**: Mapeo (`[String: String]`) entre nombres de lugares y claves de estaciones recomendadas.
-
----
-
-## 💻 Instrucciones de Ejecución
-
-### Requisitos previos
-* Tener instalado el compilador o Toolchain de **Swift** (v5.0 o superior).
-
-### Pasos para ejecutar
-1. Clona o descarga el archivo fuente (por ejemplo, `main.swift`).
-2. Abre la terminal en el directorio del proyecto.
-3. Ejecuta el archivo directamente con el siguiente comando:
-
-```bash
-swift main.swift
-```
+* **Campo: Rendimiento y Calidad**
+  * **RNF-03 (Procesamiento en Memoria):** Búsquedas, filtrados y cálculos inmediatos sin latencia de red.
+  * **RNF-04 (Sanitización de Cadenas):** Normalización de entradas para garantizar tolerancia a errores de tipeo o formato.
 
 ---
 
-## 📌 Ejemplo de Uso
+**Nuevos Requerimientos Agregados (Última Actualización)**
 
-```text
-=== SISTEMA DE METRO LIMA ===
-1. Buscar una estación
-2. Consultar cómo llegar a un destino
-3. Ver estaciones por línea
-4. Salir
-Elige una opción: 1
-
-Ingresa el nombre de la estación: Central
-
-========================================
-🚇 ESTACIÓN: Central (MET)
-📍 Línea: Metropolitano
-🛠️ Estado: Operativa
-🛗 Ascensor: Sí
-⚠️ Info: Conectará mediante túnel con L2.
-========================================
-```
+* **Integración del Metropolitano (BRT):** Incorporación del sistema de buses con sus paraderos clave y nodos de enlace subterráneos.
+* **Ordenamiento Dual por Línea:** Selección entre vista por recorrido de trenes/buses o vista alfabética A-Z.
+* **Mapeo de Estaciones Adyacentes:** Mapeo automático de paradas vecinas (anterior/siguiente) en las fichas de consulta.
+* **Atajos de Destinos Populares:** Reconocimiento de consultas como "Aeropuerto", "Gamarra", "Naranjal" o "Ate" para dirigir al usuario a la estación correcta.
