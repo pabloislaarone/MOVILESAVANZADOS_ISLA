@@ -20,6 +20,8 @@ App con dos pantallas dentro de un Navigation Controller. En **Nueva Venta** se 
 ![nueva venta](evidencias/evidencia01.png)
 ![resultado](evidencias/evidencia02.png)
 
+**Guía del Storyboard:** [GUIA_STORYBOARD.md](GUIA_STORYBOARD.md)
+
 **Nota:** los prompts y la comparación con la IA están en [PROMPTS.md](PROMPTS.md).
 
 ---
