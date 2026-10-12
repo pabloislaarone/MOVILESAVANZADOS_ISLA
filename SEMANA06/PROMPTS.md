@@ -38,7 +38,7 @@ Generó los tres archivos. `VentaModel` sigue el mismo estilo que `ClienteModel`
 Sobre `class` vs `struct`, explicó que se usa `class` porque es un tipo por **referencia**: la pantalla "Resultado" recibe el mismo objeto creado en "Nueva Venta", igual que en el ejercicio de ventanas modales. Además, al heredar de `NSObject` mantiene el mismo patrón visto en clase.
 
 ### ¿Funcionó a la primera?
-_(Completar después de ejecutar en Xcode.)_ Con los datos del ejemplo, los valores esperados coinciden con los de la guía.
+Sí, en cuanto a la lógica: al ejecutarlo en el simulador, la navegación con el segue `showResultado` funcionó y la pantalla Resultado recibió el `VentaModel` con los valores calculados. Sin embargo, en mi diseño los labels de valor quedaron muy angostos, así que los montos se ven cortados (por ejemplo, "S/. 14…"). Eso no es un error del código sino del Storyboard, y se arregla haciendo más anchos esos labels o activando *Autoshrink → Minimum Font Scale*.
 
 ### ¿Usó algo que no hemos visto en clase?
 Usó el operador `?? 0` para convertir el texto a `Double`, de modo que si un campo está vacío se toma como 0 y la app no se cae. No usó `guard let`, Combine ni Codable.

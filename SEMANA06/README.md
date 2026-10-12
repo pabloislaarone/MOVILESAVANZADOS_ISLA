@@ -16,9 +16,8 @@ App con dos pantallas dentro de un Navigation Controller. En **Nueva Venta** se 
 * Resultado (`ResultadoViewController`): `lblSubtotal`, `lblIgv`, `lblBase`, `lblIntereses`, `lblTotal`, `lblCuota`.
 * Segue Show desde el botón Calcular con identifier `showResultado`.
 
-**Evidencias:**
-![nueva venta](evidencias/evidencia01.png)
-![resultado](evidencias/evidencia02.png)
+**Evidencia:** Storyboard (Navigation Controller → Nueva Venta → Resultado con el segue `showResultado`) y la app ejecutándose en el simulador (iPhone 17 Pro):
+![calculadora](evidencias/evidencia01.png)
 
 **Guía del Storyboard:** [GUIA_STORYBOARD.md](GUIA_STORYBOARD.md)
 
