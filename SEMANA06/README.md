@@ -12,7 +12,11 @@
 Se creó un proyecto UIKit con dos pantallas. A la PANTALLA 01 se le agregó el ícono de TECSUP en `Assets > AppIcon`, luego se incrustó en un **Navigation Controller** (`Editor > Embed In > Navigation Controller`) y, desde un Bar Button Item "A Pantalla 2", se creó un segue **Show** hacia la PANTALLA 02, controlada por `ViewController2`.
 
 **Evidencias:**
+
+Ícono de TECSUP en `Assets > AppIcon`:
 ![icono](evidencias/evidencia01.png)
+
+Storyboard con Navigation Controller, PANTALLA 01 y PANTALLA 02 unidas por el segue Show:
 ![navegacion](evidencias/evidencia02.png)
 
 **16. ¿Qué cambio pudo notar en el diseño de la vista 1?**  
@@ -31,9 +35,16 @@ Básicamente, es un contenedor que administra una **pila de pantallas**. Cada ve
 Se creó la clase `ClienteModel` (subclase de `NSObject`) para agrupar los datos del cliente. En la pantalla "DATOS DEL CLIENTE" se arma el objeto con los `UITextField` y se abre la pantalla "DATOS INGRESADOS" de forma **modal** usando `instantiateViewController(identifier:)` y `present`. Para que funcione, la segunda pantalla tiene como **Storyboard ID** `ViewControllerConfirmacion`. Además, se agregó el botón **Volver**, que cierra el modal con `dismiss(animated:)`.
 
 **Evidencias:**
-![datos cliente](evidencias/evidencia03.png)
-![datos ingresados](evidencias/evidencia04.png)
+
+Storyboard de las dos pantallas:
+![storyboard modal](evidencias/evidencia03.png)
+
+Ejecución en el simulador (iPhone 17 Pro): pantalla "DATOS DEL CLIENTE" con los datos ingresados:
+![datos cliente](evidencias/evidencia04.png)
+
+Ventana modal "DATOS INGRESADOS" mostrando los datos recibidos:
+![datos ingresados](evidencias/evidencia05.png)
 
 ---
 
-> Las capturas se agregan en `evidencias/` después de ejecutar en el simulador. Los pasos del Storyboard están en [GUIA_STORYBOARD.md](GUIA_STORYBOARD.md).
+> Los pasos del Storyboard están en [GUIA_STORYBOARD.md](GUIA_STORYBOARD.md).
