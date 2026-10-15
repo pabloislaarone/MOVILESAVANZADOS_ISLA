@@ -25,6 +25,23 @@ class ElementosViewController: UIViewController, UITableViewDelegate, UITableVie
             cell.detailTextLabel?.text = elemento.tipo
             cell.imageView?.image = cultura.imagenDe(elemento)
         }
+        
         return cell
+    }
+    // Al seleccionar un elemento, ir al detalle
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        performSegue(withIdentifier: "showDetalle", sender: indexPath)
+    }
+
+    // Pasar la cultura y el elemento seleccionado a la pantalla 3
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showDetalle",
+           let destino = segue.destination as? DetalleViewController,
+           let indexPath = sender as? IndexPath,
+           let cultura = cultura {
+            destino.cultura = cultura
+            destino.elemento = cultura.elementos[indexPath.row]
+        }
     }
 }
