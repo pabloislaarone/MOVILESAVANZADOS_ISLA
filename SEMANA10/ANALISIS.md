@@ -34,6 +34,24 @@ La diferencia en el neto es menor que la del bruto porque la ONP se queda con el
 
 Horas extras = 62.50 + 67.50 = **S/ 130.00**, sobre un total de S/ 3,253.00 → **4.00%** (exactamente 3.996%) de las remuneraciones.
 
+## Nivel 3 (reto)
+
+**ONP vs AFP lado a lado:** debajo de la boleta, la app muestra dos columnas con la pensión, el total de descuentos y el neto en cada sistema, con los mismos datos. En el caso 3: ONP S/ 2,630.11 y AFP Ejemplo S/ 2,631.73.
+
+**Renta de 5.ª categoría (versión simplificada):** se activa con el Picker "Renta 5.ª". En los casos 1 a 4 queda apagada, como pide el enunciado.
+
+| Paso (caso 3) | Cálculo | Monto |
+| --- | --- | ---: |
+| Gratificaciones del año | (3,000 + 123) × 2 | 6,246.00 |
+| Bonificación extraordinaria | 6,246 × 9% | 562.14 |
+| Renta anual proyectada | 3,253 × 12 + 6,246 + 562.14 | 45,844.14 |
+| Renta neta | 45,844.14 − 7 UIT (38,500) | 7,344.14 |
+| Impuesto anual | 7,344.14 × 8% (primer tramo) | 587.53 |
+| Retención del mes | 587.53 ÷ 12 | **48.96** |
+| Neto con renta | 2,631.73 − 48.96 | **2,582.77** |
+
+Se asume el mismo sueldo los 12 meses. La SUNAT usa divisores distintos según el mes y resta lo ya retenido, pero con un sueldo fijo el resultado mensual es prácticamente el mismo.
+
 ## 5. Con datos reales
 
 > Pendiente: cada participante elige una oferta laboral publicada (sueldo ≥ RMV), la ingresa en las columnas **Propio** de la hoja Casos con su enlace y fecha, y anota aquí el % del bruto que llega como neto. Luego se compara con dos compañeros.
@@ -55,3 +73,6 @@ Horas extras = 62.50 + 67.50 = **S/ 130.00**, sobre un total de S/ 3,253.00 → 
 | Formato de boleta | 3 bloques + neto | Art. 19 del D.S. 001-98-TR | 28/10/2026 |
 | Tasas AFP reales | Fondo 10%; comisión Habitat 1.47%, Integra 1.55%, Prima 1.60%, Profuturo 1.69%; seguro 1.37% | SBS, comisiones y primas del SPP, devengue octubre 2026 | 28/10/2026 |
 | AFP Ejemplo | 10% / 1.60% / 1.35% | Enunciado del tema (solo casos de prueba) | 28/10/2026 |
+| UIT 2026 | S/ 5,500 | D.S. N.º 301-2025-EF | 28/10/2026 |
+| Renta 5.ª: deducción y tramos | 7 UIT; 8% / 14% / 17% / 20% / 30% | Arts. 46 y 53 de la Ley del Impuesto a la Renta | 28/10/2026 |
+| Gratificaciones y bonificación | 2 al año; 9% | Ley 27735 y Ley 30334 | 28/10/2026 |

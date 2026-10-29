@@ -30,3 +30,7 @@ App y Excel deben dar lo mismo al centavo en los 4 casos: caso 1 → neto 2,175.
 ## Qué se ajustó a mano
 - Se usó `Decimal` en vez de `Double` para que el redondeo a 2 decimales sea igual al `ROUND` de Excel (con `Double`, 43.9155 podía quedar en 43.91).
 - El valor hora no se redondea porque es un paso intermedio; así se hace en la app y en el Excel.
+- Se quitaron `ForEach` y `Spacer` para usar solo los controles vistos en clase: las opciones del Picker se escriben una por una y las filas de la boleta se leen del array por posición.
+
+## Prompt del nivel 3 (reto)
+Agrega a la misma pantalla una comparación ONP vs AFP lado a lado con los mismos datos (pensión, total de descuentos y neto) y una retención de renta de 5.ª categoría opcional: renta anual = total del mes × 12 + 2 gratificaciones + 9% de bonificación; menos 7 UIT (UIT 2026 = S/ 5,500); impuesto por tramos 8/14/17/20/30%; retención = impuesto ÷ 12. Debe quedar apagada por defecto para no cambiar los casos 1 a 4, y el Excel debe dar lo mismo.
