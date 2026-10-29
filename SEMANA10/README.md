@@ -18,7 +18,8 @@ SEMANA10/
 ├── Boleta_de_Pago.xlsx             # hojas Parámetros, Boleta, Casos y Explicación
 ├── ANALISIS.md                     # 5 preguntas de análisis + tabla de fuentes
 ├── PROMPTS.md
-├── evidencias/                     # capturas del simulador
+├── evidencias/                     # capturas del simulador y del Excel
+├── Semana10_BoletaPago_Evidencias.pdf
 └── Semana10_BoletaPago.zip         # todo lo anterior en un solo archivo
 ```
 
@@ -34,6 +35,8 @@ El Excel se abre directo; solo se editan las celdas amarillas de la hoja **Bolet
 
 ## Capturas
 
-| Formulario | Boleta (caso 3) | ONP vs AFP |
+| Formulario (caso 4) | Boleta (caso 4) | ONP vs AFP (caso 4) |
 | --- | --- | --- |
-| ![Formulario](evidencias/01_formulario.png) | ![Boleta](evidencias/02_boleta_caso3.png) | ![Comparación](evidencias/03_onp_vs_afp.png) |
+| ![Formulario](evidencias/01_formulario_caso4.png) | ![Boleta](evidencias/02_boleta_caso4.png) | ![ONP vs AFP](evidencias/03_onp_vs_afp_caso4.png) |
+
+![Excel · hoja Casos](evidencias/04_excel_casos.png)
