@@ -30,6 +30,18 @@ struct TasaAFP {
     }
 }
 
+// MARK: - Un tramo del impuesto a la renta
+
+struct TramoRenta {
+    let hastaUIT: Decimal?      // nil = sin tope (último tramo)
+    let tasa: Decimal
+
+    init(hastaUIT: Decimal?, tasa: String) {
+        self.hastaUIT = hastaUIT
+        self.tasa = Decimal(string: tasa)!
+    }
+}
+
 // MARK: - Datos que ingresa el usuario
 
 struct DatosTrabajador {
@@ -37,17 +49,17 @@ struct DatosTrabajador {
     let sueldoBasico: Decimal
     let diasLaborados: Int
     let tieneHijos: Bool
-    let sistema: SistemaPension
+    var sistema: SistemaPension          // var: la comparación ONP vs AFP hace una copia cambiando el sistema
     let nombreAFP: String
     let horasExtras25: Decimal
     let horasExtras35: Decimal
     let adelantos: Decimal
+    var calcularRenta: Bool = false      // reto: retención de renta de 5.ª (por defecto no, como en los casos)
 }
 
 // MARK: - Una línea de la boleta (nombre + monto)
 
-struct Concepto: Identifiable {
-    let id = UUID()
+struct Concepto {
     let nombre: String
     let monto: Decimal
 }
@@ -94,7 +106,8 @@ enum Validador {
                         nombreAFP: String,
                         horas25Texto: String,
                         horas35Texto: String,
-                        adelantosTexto: String) throws -> DatosTrabajador {
+                        adelantosTexto: String,
+                        calcularRenta: Bool = false) throws -> DatosTrabajador {
 
         guard let sueldo = numero(sueldoTexto, vacioEsCero: false), sueldo > 0 else {
             throw ErrorValidacion.sueldoInvalido
@@ -128,6 +141,7 @@ enum Validador {
                                nombreAFP: nombreAFP,
                                horasExtras25: h25,
                                horasExtras35: h35,
-                               adelantos: adelantos)
+                               adelantos: adelantos,
+                               calcularRenta: calcularRenta)
     }
 }

@@ -70,6 +70,34 @@ final class BoletaPagoTests: XCTestCase {
         XCTAssertEqual(b.essalud, d("321.66"))
     }
 
+    // MARK: - Nivel 3
+
+    func testReto_ComparacionONPvsAFP_Caso3() {
+        let b = boleta(sueldo: "3000", dias: 30, hijos: true, sistema: .afp,
+                       h25: "4", h35: "4", adelantos: "200")
+        XCTAssertEqual(b.con(sistema: .onp).netoAPagar, d("2630.11"))
+        XCTAssertEqual(b.con(sistema: .afp).netoAPagar, d("2631.73"))
+    }
+
+    func testReto_RentaQuinta_Caso3() {
+        var datos = boleta(sueldo: "3000", dias: 30, hijos: true, sistema: .afp,
+                           h25: "4", h35: "4", adelantos: "200").datos
+        datos.calcularRenta = true
+        let b = Boleta(datos: datos)
+        XCTAssertEqual(b.rentaBrutaAnual, d("45844.14"))
+        XCTAssertEqual(b.impuestoAnual, d("587.53"))
+        XCTAssertEqual(b.rentaQuinta, d("48.96"))
+        XCTAssertEqual(b.netoAPagar, d("2582.77"))
+    }
+
+    func testReto_RentaQuinta_VariosTramos() {
+        var datos = boleta(sueldo: "12000", dias: 30, hijos: false, sistema: .onp).datos
+        datos.calcularRenta = true
+        let b = Boleta(datos: datos)
+        XCTAssertEqual(b.impuestoAnual, d("17432.20"))
+        XCTAssertEqual(b.rentaQuinta, d("1452.68"))
+    }
+
     func testValidacionRechazaDias() {
         XCTAssertThrowsError(try Validador.validar(nombre: "", sueldoTexto: "1500", diasTexto: "31",
                                                    tieneHijos: false, sistema: .onp, nombreAFP: "",

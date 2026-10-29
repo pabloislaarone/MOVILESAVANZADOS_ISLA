@@ -31,3 +31,9 @@ SEMANA10/
 5. Correr con **⌘R** en un iPhone del simulador. Los tests se corren con **⌘U**.
 
 El Excel se abre directo; solo se editan las celdas amarillas de la hoja **Boleta** o **Casos**.
+
+## Capturas
+
+| Formulario | Boleta (caso 3) | ONP vs AFP |
+| --- | --- | --- |
+| ![Formulario](evidencias/01_formulario.png) | ![Boleta](evidencias/02_boleta_caso3.png) | ![Comparación](evidencias/03_onp_vs_afp.png) |

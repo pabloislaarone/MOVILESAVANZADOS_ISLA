@@ -97,6 +97,50 @@ class Boleta {
         Boleta.redondear(datos.adelantos)
     }
 
+    // MARK: - Renta de 5.ª categoría (nivel 3, versión simplificada)
+    //
+    // Supone que el trabajador gana lo mismo los 12 meses:
+    //   renta anual = total remuneraciones × 12 + 2 gratificaciones + bonificación del 9%
+    //   renta neta  = renta anual − 7 UIT
+    //   impuesto    = se aplica cada tasa solo a la parte de la renta que cae en su tramo
+    //   retención   = impuesto ÷ 12
+
+    /// Dos gratificaciones de (sueldo básico + asignación familiar).
+    var gratificacionesAnio: Decimal {
+        Boleta.redondear((datos.sueldoBasico + asignacionFamiliar) * Parametros.gratificacionesPorAnio)
+    }
+
+    var bonificacionExtraordinaria: Decimal {
+        Boleta.redondear(gratificacionesAnio * Parametros.porcentajeBonificacion)
+    }
+
+    var rentaBrutaAnual: Decimal {
+        totalRemuneraciones * Parametros.mesesDelAnio + gratificacionesAnio + bonificacionExtraordinaria
+    }
+
+    var rentaNetaAnual: Decimal {
+        let neta = rentaBrutaAnual - Parametros.uitDeducibles * Parametros.uit
+        return neta > 0 ? neta : 0
+    }
+
+    var impuestoAnual: Decimal {
+        var impuesto: Decimal = 0
+        var desde: Decimal = 0
+        for tramo in Parametros.tramosRenta {
+            let hasta = tramo.hastaUIT.map { $0 * Parametros.uit }
+            if rentaNetaAnual > desde {
+                let tope = (hasta != nil && rentaNetaAnual > hasta!) ? hasta! : rentaNetaAnual
+                impuesto += (tope - desde) * tramo.tasa
+            }
+            if let hasta = hasta { desde = hasta }
+        }
+        return Boleta.redondear(impuesto)
+    }
+
+    var rentaQuinta: Decimal {
+        datos.calcularRenta ? Boleta.redondear(impuestoAnual / Parametros.mesesDelAnio) : 0
+    }
+
     /// Array con los conceptos de descuentos (los que no aplican salen en 0.00).
     var descuentos: [Concepto] {
         [
@@ -104,8 +148,23 @@ class Boleta {
             Concepto(nombre: "AFP fondo", monto: afpFondo),
             Concepto(nombre: "AFP comisión", monto: afpComision),
             Concepto(nombre: "AFP seguro", monto: afpSeguro),
+            Concepto(nombre: "Renta 5.ª categoría", monto: rentaQuinta),
             Concepto(nombre: "Adelantos", monto: adelantos)
         ]
+    }
+
+    /// Pensión sola (ONP o la suma de los tres descuentos de AFP).
+    var totalPension: Decimal {
+        onp + afpFondo + afpComision + afpSeguro
+    }
+
+    // MARK: - Comparación ONP vs AFP (nivel 3)
+
+    /// La misma boleta, pero con el otro sistema de pensiones.
+    func con(sistema: SistemaPension) -> Boleta {
+        var copia = datos
+        copia.sistema = sistema
+        return Boleta(datos: copia)
     }
 
     var totalDescuentos: Decimal {

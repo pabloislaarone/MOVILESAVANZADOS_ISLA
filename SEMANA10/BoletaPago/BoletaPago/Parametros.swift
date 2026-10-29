@@ -50,6 +50,30 @@ enum Parametros {
     /// Orden en que aparecen las AFP en el Picker (un diccionario no guarda orden).
     static let nombresAFP: [String] = ["AFP Ejemplo", "Habitat", "Integra", "Prima", "Profuturo"]
 
+    // MARK: - Renta de 5.ª categoría (nivel 3, reto)
+
+    /// UIT 2026: S/ 5,500 (D.S. N.º 301-2025-EF).
+    static let uit: Decimal = 5500
+
+    /// Deducción anual de 7 UIT (art. 46 de la Ley del Impuesto a la Renta).
+    static let uitDeducibles: Decimal = 7
+
+    /// Meses del año que se proyectan (versión simplificada: sueldo igual todo el año).
+    static let mesesDelAnio: Decimal = 12
+
+    /// Gratificaciones al año (julio y diciembre, Ley 27735) y bonificación extraordinaria del 9% (Ley 30334).
+    static let gratificacionesPorAnio: Decimal = 2
+    static let porcentajeBonificacion: Decimal = Decimal(string: "0.09")!
+
+    /// Tramos del impuesto (art. 53 LIR). "hasta" en UIT; el último tramo no tiene tope.
+    static let tramosRenta: [TramoRenta] = [
+        TramoRenta(hastaUIT: 5,   tasa: "0.08"),
+        TramoRenta(hastaUIT: 20,  tasa: "0.14"),
+        TramoRenta(hastaUIT: 35,  tasa: "0.17"),
+        TramoRenta(hastaUIT: 45,  tasa: "0.20"),
+        TramoRenta(hastaUIT: nil, tasa: "0.30")
+    ]
+
     // MARK: - Datos ficticios de la boleta (nivel 3)
 
     static let razonSocial = "Comercial Andina Ejemplo S.A.C."

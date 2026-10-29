@@ -2,8 +2,9 @@
 //  ContentView.swift
 //  BoletaPago
 //
-//  Una sola pantalla: formulario arriba y, al pulsar Calcular, la boleta debajo.
-//  Controles usados: Text, VStack, HStack, @State, TextField, Picker, Button y ScrollView.
+//  Una sola pantalla: formulario arriba y, al pulsar Calcular, la boleta debajo
+//  y la comparación ONP vs AFP (nivel 3).
+//  Controles usados: solo Text, VStack, HStack, @State, TextField, Picker, Button y ScrollView.
 //  La pantalla no calcula nada: valida con Validador y le pide todo a la clase Boleta.
 //
 
@@ -22,6 +23,7 @@ struct ContentView: View {
     @State private var horas25Texto = ""
     @State private var horas35Texto = ""
     @State private var adelantosTexto = ""
+    @State private var calcularRenta = false
 
     // MARK: - Resultado
 
@@ -63,6 +65,7 @@ struct ContentView: View {
 
                 if let boleta = boleta {
                     vistaBoleta(boleta)
+                    vistaComparacion(boleta)
                 }
             }
             .padding()
@@ -89,9 +92,8 @@ struct ContentView: View {
             HStack {
                 Text("Sistema de pensiones")
                 Picker("Sistema", selection: $sistema) {
-                    ForEach(SistemaPension.allCases, id: \.self) { opcion in
-                        Text(opcion.rawValue).tag(opcion)
-                    }
+                    Text("ONP").tag(SistemaPension.onp)
+                    Text("AFP").tag(SistemaPension.afp)
                 }
                 .pickerStyle(.segmented)
             }
@@ -101,9 +103,11 @@ struct ContentView: View {
                 HStack {
                     Text("AFP")
                     Picker("AFP", selection: $nombreAFP) {
-                        ForEach(Parametros.nombresAFP, id: \.self) { nombre in
-                            Text(nombre).tag(nombre)
-                        }
+                        Text(Parametros.nombresAFP[0]).tag(Parametros.nombresAFP[0])
+                        Text(Parametros.nombresAFP[1]).tag(Parametros.nombresAFP[1])
+                        Text(Parametros.nombresAFP[2]).tag(Parametros.nombresAFP[2])
+                        Text(Parametros.nombresAFP[3]).tag(Parametros.nombresAFP[3])
+                        Text(Parametros.nombresAFP[4]).tag(Parametros.nombresAFP[4])
                     }
                 }
             }
@@ -111,6 +115,15 @@ struct ContentView: View {
             campo("Horas extras al 25%", texto: $horas25Texto, teclado: .decimalPad)
             campo("Horas extras al 35%", texto: $horas35Texto, teclado: .decimalPad)
             campo("Adelantos (S/)", texto: $adelantosTexto, teclado: .decimalPad)
+
+            HStack {
+                Text("Renta 5.ª (reto)")
+                Picker("Renta 5.ª", selection: $calcularRenta) {
+                    Text("No").tag(false)
+                    Text("Sí").tag(true)
+                }
+                .pickerStyle(.segmented)
+            }
         }
     }
 
@@ -137,7 +150,8 @@ struct ContentView: View {
                                               nombreAFP: nombreAFP,
                                               horas25Texto: horas25Texto,
                                               horas35Texto: horas35Texto,
-                                              adelantosTexto: adelantosTexto)
+                                              adelantosTexto: adelantosTexto,
+                                              calcularRenta: calcularRenta)
             boleta = Boleta(datos: datos)
             mensajeError = ""
         } catch let error as ErrorValidacion {
@@ -146,6 +160,20 @@ struct ContentView: View {
         } catch {
             boleta = nil
             mensajeError = "Revisa los datos ingresados."
+        }
+    }
+
+    // MARK: - Filas
+
+    /// Una línea de la boleta: nombre a la izquierda y monto a la derecha.
+    private func fila(_ concepto: Concepto, negrita: Bool = false) -> some View {
+        HStack {
+            Text(concepto.nombre)
+                .fontWeight(negrita ? .bold : .regular)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            Text(Boleta.formato(concepto.monto))
+                .fontWeight(negrita ? .bold : .regular)
+                .monospacedDigit()
         }
     }
 
@@ -162,26 +190,39 @@ struct ContentView: View {
                     .font(.caption)
             }
 
-            bloque(titulo: "REMUNERACIONES",
-                   conceptos: boleta.remuneraciones,
-                   tituloTotal: "Total remuneraciones",
-                   total: boleta.totalRemuneraciones)
+            // Bloque 1: remuneraciones (se recorre el array por posición)
+            VStack(alignment: .leading, spacing: 6) {
+                Text("REMUNERACIONES").font(.headline)
+                fila(boleta.remuneraciones[0])
+                fila(boleta.remuneraciones[1])
+                fila(boleta.remuneraciones[2])
+                fila(boleta.remuneraciones[3])
+                fila(Concepto(nombre: "Total remuneraciones", monto: boleta.totalRemuneraciones), negrita: true)
+            }
 
-            bloque(titulo: "RETENCIONES / DESCUENTOS",
-                   conceptos: boleta.descuentos,
-                   tituloTotal: "Total descuentos",
-                   total: boleta.totalDescuentos)
+            // Bloque 2: retenciones / descuentos
+            VStack(alignment: .leading, spacing: 6) {
+                Text("RETENCIONES / DESCUENTOS").font(.headline)
+                fila(boleta.descuentos[0])
+                fila(boleta.descuentos[1])
+                fila(boleta.descuentos[2])
+                fila(boleta.descuentos[3])
+                fila(boleta.descuentos[4])
+                fila(boleta.descuentos[5])
+                fila(Concepto(nombre: "Total descuentos", monto: boleta.totalDescuentos), negrita: true)
+            }
 
-            bloque(titulo: "APORTACIONES DEL EMPLEADOR",
-                   conceptos: boleta.aportaciones,
-                   tituloTotal: nil,
-                   total: nil)
+            // Bloque 3: aportaciones del empleador
+            VStack(alignment: .leading, spacing: 6) {
+                Text("APORTACIONES DEL EMPLEADOR").font(.headline)
+                fila(boleta.aportaciones[0])
+            }
 
             HStack {
                 Text("NETO A PAGAR")
                     .font(.title3)
                     .bold()
-                Spacer()
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 Text("S/ \(Boleta.formato(boleta.netoAPagar))")
                     .font(.title3)
                     .bold()
@@ -195,28 +236,45 @@ struct ContentView: View {
         .cornerRadius(12)
     }
 
-    private func bloque(titulo: String, conceptos: [Concepto], tituloTotal: String?, total: Decimal?) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(titulo)
-                .font(.headline)
-            ForEach(conceptos) { concepto in
-                HStack {
-                    Text(concepto.nombre)
-                    Spacer()
-                    Text(Boleta.formato(concepto.monto))
-                        .monospacedDigit()
-                }
+    // MARK: - Comparación ONP vs AFP lado a lado (nivel 3)
+
+    private func vistaComparacion(_ boleta: Boleta) -> some View {
+        let conONP = boleta.con(sistema: .onp)
+        let conAFP = boleta.con(sistema: .afp)
+        let diferencia = conAFP.netoAPagar - conONP.netoAPagar
+        let conviene = diferencia > 0 ? boleta.datos.nombreAFP : (diferencia < 0 ? "ONP" : "ninguno")
+        let monto = diferencia < 0 ? -diferencia : diferencia
+
+        return VStack(alignment: .leading, spacing: 10) {
+            Text("ONP vs AFP con los mismos datos").font(.headline)
+            HStack(alignment: .top, spacing: 12) {
+                columnaSistema(titulo: "ONP", boleta: conONP)
+                columnaSistema(titulo: boleta.datos.nombreAFP, boleta: conAFP)
             }
-            if let tituloTotal = tituloTotal, let total = total {
-                HStack {
-                    Text(tituloTotal).bold()
-                    Spacer()
-                    Text(Boleta.formato(total))
-                        .bold()
-                        .monospacedDigit()
-                }
-            }
+            Text(diferencia == 0
+                 ? "Este mes los dos sistemas dejan el mismo neto."
+                 : "Este mes \(conviene) deja S/ \(Boleta.formato(monto)) más de neto.")
+                .font(.subheadline)
         }
+        .padding()
+        .background(Color.orange.opacity(0.08))
+        .cornerRadius(12)
+    }
+
+    private func columnaSistema(titulo: String, boleta: Boleta) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(titulo).bold()
+            Text("Pensión").font(.caption).foregroundColor(.secondary)
+            Text(Boleta.formato(boleta.totalPension)).monospacedDigit()
+            Text("Total descuentos").font(.caption).foregroundColor(.secondary)
+            Text(Boleta.formato(boleta.totalDescuentos)).monospacedDigit()
+            Text("Neto").font(.caption).foregroundColor(.secondary)
+            Text("S/ \(Boleta.formato(boleta.netoAPagar))").bold().monospacedDigit()
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(8)
+        .background(Color.white.opacity(0.6))
+        .cornerRadius(8)
     }
 }
 
