@@ -4,6 +4,8 @@ on:
     branches: [demo01]
     paths: ['ci/lab11/**', '.github/workflows/lab11-capturas.yml']
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   capturas:
     runs-on: macos-26
@@ -48,3 +50,20 @@ jobs:
         with:
           name: capturas-lab11
           path: out/shots
+      - name: Subir capturas a rama temporal
+        if: always()
+        run: |
+          mkdir -p /tmp/png
+          python3 - <<'PY'
+          import json, shutil, os
+          m = json.load(open('out/shots/manifest.json'))
+          for t in m:
+              for a in t['attachments']:
+                  n = a.get('suggestedHumanReadableName', a['exportedFileName'])
+                  n = n.split('_0_')[0] if '_0_' in n else os.path.splitext(n)[0]
+                  shutil.copy(os.path.join('out/shots', a['exportedFileName']), f"/tmp/png/{n}.png")
+                  print(n)
+          PY
+          cd /tmp/png && git init -q -b capturas-lab11 && git add . \
+            && git -c user.name="Pablo Isla" -c user.email="pablo.isla@tecsup.edu.pe" commit -qm "capturas" \
+            && git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" capturas-lab11

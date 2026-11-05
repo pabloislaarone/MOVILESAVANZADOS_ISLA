@@ -78,6 +78,8 @@ final class CapturasUITests: XCTestCase {
         volver(app)
 
         // Persistencia: se cierra y se vuelve a abrir la app
+        XCUIDevice.shared.press(.home) // la app pasa al fondo y SwiftData guarda
+        sleep(2)
         app.terminate()
         app.launch()
         XCTAssertTrue(fila(app, "Quispe Mamani, Ana").waitForExistence(timeout: 15))
@@ -95,6 +97,8 @@ final class CapturasUITests: XCTestCase {
             sleep(1)
             captura(app, "08_buscar_gar")
         }
+        XCUIDevice.shared.press(.home) // la app pasa al fondo y SwiftData guarda
+        sleep(2)
         app.terminate()
         app.launch()
         XCTAssertTrue(fila(app, "Isla Arone, Pablo").waitForExistence(timeout: 15))
