@@ -1,0 +1,50 @@
+name: lab11-capturas
+on:
+  push:
+    branches: [demo01]
+    paths: ['ci/lab11/**', '.github/workflows/lab11-capturas.yml']
+  workflow_dispatch:
+jobs:
+  capturas:
+    runs-on: macos-26
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: manual
+          path: app
+      - name: Herramientas
+        run: |
+          brew install xcodegen
+          xcodebuild -version
+          xcrun simctl list devices available | grep -i iphone
+      - name: Generar proyecto
+        run: cd ci/lab11 && xcodegen generate
+      - name: Ejecutar en simulador y capturar
+        run: |
+          set -o pipefail
+          DEV=$(xcrun simctl list devices available -j | python3 -c "
+          import json,sys
+          d=json.load(sys.stdin)['devices']
+          ks=sorted([k for k in d if 'iOS' in k])
+          for k in reversed(ks):
+              c=[x for x in d[k] if x['name'].startswith('iPhone') and 'Pro' in x['name'] and 'Max' not in x['name']] or [x for x in d[k] if x['name'].startswith('iPhone')]
+              if c: print(c[-1]['udid']); break
+          ")
+          echo "Simulador: $DEV"
+          xcrun simctl boot "$DEV" || true
+          xcrun simctl bootstatus "$DEV" -b
+          xcodebuild test -project ci/lab11/Lab11Capturas.xcodeproj -scheme Lab11 \
+            -destination "id=$DEV" -resultBundlePath out/R.xcresult 2>&1 | tail -150
+      - name: Exportar capturas
+        if: always()
+        run: |
+          mkdir -p out/shots
+          xcrun xcresulttool export attachments --path out/R.xcresult --output-path out/shots || true
+          ls -la out/shots
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: capturas-lab11
+          path: out/shots
