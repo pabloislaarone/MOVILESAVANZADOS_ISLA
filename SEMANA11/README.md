@@ -63,3 +63,15 @@ Agenda de contactos con las cuatro operaciones del CRUD. Los datos se guardan en
 ### Actividad 02: SwiftData con SwiftUI (Alumno)
 
 Lista de alumnos con crear, ver detalle, editar, eliminar y buscar por apellido. La vista se actualiza sola con `@Query`.
+
+| Nuevo alumno | Lista | Detalle | Editar | Detalle actualizado |
+|---|---|---|---|---|
+| ![Nuevo](evidencias/actividad02/01_nuevo_alumno.png) | ![Lista](evidencias/actividad02/02_lista_alumnos.png) | ![Detalle](evidencias/actividad02/03_detalle_alumno.png) | ![Editar](evidencias/actividad02/04_editar_alumno.png) | ![Actualizado](evidencias/actividad02/05_detalle_actualizado.png) |
+
+| Persistencia al reabrir | Buscar "gar" | Eliminar | Lista tras eliminar | Curso asignado |
+|---|---|---|---|---|
+| ![Persistencia](evidencias/actividad02/06_persistencia_al_reabrir.png) | ![Buscar](evidencias/actividad02/07_buscar_por_apellido.png) | ![Eliminar](evidencias/actividad02/08_eliminar_swipe.png) | ![Tras eliminar](evidencias/actividad02/09_lista_tras_eliminar.png) | ![Curso](evidencias/actividad02/10_curso_asignado.png) |
+
+## Evidencias
+
+- [`Lab11_Evidencias.pdf`](Lab11_Evidencias.pdf)
