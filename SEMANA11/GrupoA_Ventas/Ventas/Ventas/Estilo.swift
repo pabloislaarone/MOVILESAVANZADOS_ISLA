@@ -15,6 +15,8 @@ final class EtiquetaColor: UILabel {
         layer.cornerRadius = 8
         layer.masksToBounds = true
         textAlignment = .center
+        setContentHuggingPriority(.required, for: .horizontal)
+        setContentCompressionResistancePriority(.required, for: .horizontal)
         configurar(texto: texto, color: color)
     }
 

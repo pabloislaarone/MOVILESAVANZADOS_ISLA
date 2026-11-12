@@ -28,7 +28,7 @@ class VentasViewController: UITableViewController, UISearchResultsUpdating {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = modo == .mias ? "Mis ventas" : "Ventas del equipo"
+        navigationItem.title = modo == .mias ? "Mis ventas" : "Ventas del equipo"
         navigationItem.rightBarButtonItem = botonIniciales()
         tableView.register(VentaCelda.self, forCellReuseIdentifier: "venta")
 
