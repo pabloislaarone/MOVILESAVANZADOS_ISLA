@@ -11,7 +11,7 @@ class MainTabBarController: UITabBarController {
         if usuario.esSupervisor {
             viewControllers = [
                 pestana(UIViewController(), "Resumen", "chart.bar.fill"),
-                pestana(UIViewController(), "Ventas", "list.bullet.rectangle.fill"),
+                pestana(VentasViewController(modo: .equipo), "Ventas", "list.bullet.rectangle.fill"),
                 pestana(ProductosViewController(), "Productos", "shippingbox.fill"),
                 pestana(ClientesViewController(), "Clientes", "person.2.fill"),
                 pestana(CuentaViewController(), "Cuenta", "person.crop.circle.fill")
@@ -21,7 +21,7 @@ class MainTabBarController: UITabBarController {
                 pestana(ProductosViewController(), "Productos", "shippingbox.fill"),
                 pestana(ClientesViewController(), "Clientes", "person.2.fill"),
                 pestana(NuevaVentaViewController(), "Venta", "cart.fill.badge.plus"),
-                pestana(UIViewController(), "Mis ventas", "list.bullet.rectangle.fill"),
+                pestana(VentasViewController(modo: .mias), "Mis ventas", "list.bullet.rectangle.fill"),
                 pestana(CuentaViewController(), "Cuenta", "person.crop.circle.fill")
             ]
         }
