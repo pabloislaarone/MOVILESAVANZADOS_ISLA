@@ -1,0 +1,76 @@
+name: ventas-capturas
+on:
+  push:
+    branches: [demo01]
+    paths: ['ci/ventas/**', '.github/workflows/ventas-capturas.yml']
+  workflow_dispatch:
+    inputs:
+      rama:
+        description: 'Rama con SEMANA11/GrupoA_Ventas (vacío = usar ci/ventas/src)'
+        required: false
+permissions:
+  contents: write
+jobs:
+  capturas:
+    runs-on: macos-26
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        if: ${{ inputs.rama != '' && inputs.rama != null }}
+        with:
+          ref: ${{ inputs.rama }}
+          path: app
+      - name: Fuente
+        run: |
+          if [ -d app/SEMANA11/GrupoA_Ventas/Ventas ]; then echo "SRC=$PWD/app/SEMANA11/GrupoA_Ventas/Ventas" >> $GITHUB_ENV; else echo "SRC=$PWD/ci/ventas/src" >> $GITHUB_ENV; fi
+      - name: Compilar el proyecto real (Ventas.xcodeproj)
+        run: |
+          set -o pipefail
+          echo "Fuente: $SRC"
+          xcodebuild -project "$SRC/Ventas.xcodeproj" -target Ventas -sdk iphonesimulator \
+            CODE_SIGNING_ALLOWED=NO build 2>&1 | grep -E "error:|warning: .*Ventas/|BUILD (SUCCEEDED|FAILED)" | head -80
+      - name: Generar proyecto de pruebas
+        run: |
+          brew install xcodegen
+          cd ci/ventas && xcodegen generate
+      - name: Ejecutar los casos en el simulador
+        run: |
+          set -o pipefail
+          DEV=$(xcrun simctl list devices available -j | python3 -c "
+          import json,sys
+          d=json.load(sys.stdin)['devices']
+          ks=sorted([k for k in d if 'iOS' in k])
+          for k in reversed(ks):
+              c=[x for x in d[k] if x['name']=='iPhone 17 Pro'] or [x for x in d[k] if x['name'].startswith('iPhone')]
+              if c: print(c[-1]['udid']); break
+          ")
+          echo "Simulador: $DEV"
+          xcrun simctl boot "$DEV" || true
+          xcrun simctl bootstatus "$DEV" -b
+          xcrun simctl status_bar "$DEV" override --time "9:41" --batteryState charged --batteryLevel 100 --wifiBars 3 || true
+          xcodebuild test -project ci/ventas/VentasCapturas.xcodeproj -scheme Ventas \
+            -destination "id=$DEV" -resultBundlePath out/R.xcresult 2>&1 | grep -E "error:|Test Case|TEST (SUCCEEDED|FAILED)|XCTAssert" | head -120
+      - name: Exportar capturas
+        if: always()
+        run: |
+          mkdir -p out/shots
+          xcrun xcresulttool export attachments --path out/R.xcresult --output-path out/shots || true
+          ls out/shots | head -50
+      - name: Subir capturas a rama temporal
+        if: always()
+        run: |
+          mkdir -p /tmp/png
+          python3 - <<'PY'
+          import json, shutil, os
+          m = json.load(open('out/shots/manifest.json'))
+          for t in m:
+              for a in t['attachments']:
+                  n = a.get('suggestedHumanReadableName', a['exportedFileName'])
+                  n = n.split('_0_')[0] if '_0_' in n else os.path.splitext(n)[0]
+                  shutil.copy(os.path.join('out/shots', a['exportedFileName']), f"/tmp/png/{n}.png")
+                  print(n)
+          PY
+          cd /tmp/png && git init -q -b capturas-lab11 && git add . \
+            && git -c user.name="Pablo Isla" -c user.email="pablo.isla@tecsup.edu.pe" commit -qm "capturas" \
+            && git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" capturas-lab11
