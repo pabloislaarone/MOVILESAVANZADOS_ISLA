@@ -5,6 +5,11 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // Con el argumento -datosDemo se cargan usuarios, productos, clientes y ventas de ejemplo
+        // (solo si la base está vacía). Se usa para las pruebas en el simulador.
+        if ProcessInfo.processInfo.arguments.contains("-datosDemo") {
+            DatosDemo.cargarSiEstaVacia()
+        }
         return true
     }
 
