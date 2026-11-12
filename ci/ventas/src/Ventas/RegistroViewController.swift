@@ -87,9 +87,7 @@ class RegistroViewController: UIViewController {
             pila.bottomAnchor.constraint(equalTo: scroll.contentLayoutGuide.bottomAnchor, constant: -16)
         ])
 
-        let toque = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing(_:)))
-        toque.cancelsTouchesInView = false
-        view.addGestureRecognizer(toque)
+        ocultarTecladoAlTocarFuera()
     }
 
     @objc private func revisarUsuario() {

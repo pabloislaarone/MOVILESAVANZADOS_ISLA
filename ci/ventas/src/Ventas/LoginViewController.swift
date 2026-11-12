@@ -95,9 +95,7 @@ class LoginViewController: UIViewController {
             pila.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 60)
         ])
 
-        let toque = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing(_:)))
-        toque.cancelsTouchesInView = false
-        view.addGestureRecognizer(toque)
+        ocultarTecladoAlTocarFuera()
     }
 
     @objc private func ingresar() {

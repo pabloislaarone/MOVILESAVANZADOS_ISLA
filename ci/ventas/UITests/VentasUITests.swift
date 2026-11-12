@@ -25,9 +25,10 @@ final class VentasUITests: XCTestCase {
 
     @MainActor
     func ocultarTeclado() {
-        if app.keyboards.count > 0 {
-            app.navigationBars.firstMatch.tap()
-        }
+        guard app.keyboards.count > 0 else { return }
+        let listo = app.toolbars.buttons["Listo"]
+        if listo.exists { listo.tap() } else { app.typeText("\n") }
+        sleep(1)
     }
 
     @MainActor
@@ -47,6 +48,7 @@ final class VentasUITests: XCTestCase {
     func login(_ usuario: String, _ clave: String) {
         escribir(app.textFields["loginUsuario"], usuario, limpiar: true)
         escribir(app.secureTextFields["loginClave"], clave, limpiar: true)
+        ocultarTeclado()
         app.buttons["Ingresar"].tap()
     }
 

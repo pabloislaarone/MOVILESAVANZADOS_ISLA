@@ -32,6 +32,15 @@ class NuevaVentaViewController: UITableViewController {
         campoCantidad.widthAnchor.constraint(equalToConstant: 44).isActive = true
         campoCantidad.addTarget(self, action: #selector(cambioCampo), for: .editingChanged)
 
+        // Barra sobre el teclado numérico con el botón Listo
+        let barra = UIToolbar()
+        barra.sizeToFit()
+        barra.items = [
+            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+            UIBarButtonItem(title: "Listo", style: .done, target: self, action: #selector(cerrarTeclado))
+        ]
+        campoCantidad.inputAccessoryView = barra
+
         tableView.tableHeaderView = cabeceraVendedor()
         tableView.tableFooterView = pieRegistrar()
     }
@@ -108,6 +117,10 @@ class NuevaVentaViewController: UITableViewController {
         cantidad = max(Int(campoCantidad.text ?? "") ?? 0, 0)
         stepper.value = Double(max(cantidad, 1))
         recalcular()
+    }
+
+    @objc private func cerrarTeclado() {
+        view.endEditing(true)
     }
 
     private func recalcular() {

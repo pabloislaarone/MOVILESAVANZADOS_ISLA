@@ -1,4 +1,5 @@
 import UIKit
+import UIKit.UIGestureRecognizerSubclass
 
 // Piezas visuales que se repiten en varias pantallas
 
@@ -154,6 +155,8 @@ enum Estilo {
         campo.autocorrectionType = .no
         campo.font = .systemFont(ofSize: 16)
         campo.accessibilityIdentifier = id
+        campo.returnKeyType = .done
+        campo.addAction(UIAction { _ in }, for: .editingDidEndOnExit) // la tecla Listo cierra el teclado
         if seguro { campo.textContentType = .oneTimeCode } // evita el autollenado de contraseñas en el simulador
 
         let pila = UIStackView(arrangedSubviews: [etiqueta, campo])
@@ -208,7 +211,26 @@ enum Estilo {
     }
 }
 
+// Toque fuera de los campos para ocultar el teclado.
+// Si el toque cae sobre un control (un campo o un botón), el gesto no hace nada:
+// así tocar otro campo no le quita el foco.
+final class ToqueFuera: UITapGestureRecognizer {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
+        if touches.first?.view is UIControl {
+            state = .failed
+            return
+        }
+        super.touchesBegan(touches, with: event)
+    }
+}
+
 extension UIViewController {
+    func ocultarTecladoAlTocarFuera() {
+        let toque = ToqueFuera(target: view, action: #selector(UIView.endEditing(_:)))
+        toque.cancelsTouchesInView = false
+        view.addGestureRecognizer(toque)
+    }
+
     func mostrarAlerta(_ titulo: String, _ mensaje: String, alCerrar: (() -> Void)? = nil) {
         let alerta = UIAlertController(title: titulo, message: mensaje, preferredStyle: .alert)
         alerta.addAction(UIAlertAction(title: "OK", style: .default) { _ in alCerrar?() })
