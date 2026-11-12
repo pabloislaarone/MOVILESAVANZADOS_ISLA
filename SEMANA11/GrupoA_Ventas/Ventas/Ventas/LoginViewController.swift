@@ -113,6 +113,6 @@ class LoginViewController: UIViewController {
 
     @objc private func irARegistro() {
         etiquetaError.isHidden = true
-        // pantalla de registro (siguiente commit)
+        navigationController?.pushViewController(RegistroViewController(), animated: true)
     }
 }
