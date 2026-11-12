@@ -1,6 +1,12 @@
 import UIKit
 import CoreData
 
+// Roles de la app (se guardan como texto en Usuario.rol)
+enum Rol {
+    static let vendedor = "Vendedor"
+    static let supervisor = "Supervisor"
+}
+
 // Acceso único al contexto de Core Data (el mismo viewContext del AppDelegate)
 enum BaseDeDatos {
 

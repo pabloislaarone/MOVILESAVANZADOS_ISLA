@@ -28,8 +28,8 @@ class VentasViewController: UITableViewController, UISearchResultsUpdating {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = modo == .mias ? "Mis ventas" : "Ventas del equipo"
-        navigationItem.rightBarButtonItem = Estilo.botonIniciales()
+        navigationItem.title = modo == .mias ? "Mis ventas" : "Ventas del equipo"
+        navigationItem.rightBarButtonItem = botonIniciales()
         tableView.register(VentaCelda.self, forCellReuseIdentifier: "venta")
 
         // ③ Búsqueda por cliente
@@ -59,6 +59,15 @@ class VentasViewController: UITableViewController, UISearchResultsUpdating {
             chipsVendedor.configurar(opciones: nombres, seleccionado: chipsVendedor.seleccionado)
         }
         cargar()
+    }
+
+    // Botón de la barra con las iniciales del usuario de la sesión
+    private func botonIniciales() -> UIBarButtonItem {
+        let etiqueta = UILabel()
+        etiqueta.text = Estilo.iniciales(Sesion.shared.usuario?.nombre ?? "")
+        etiqueta.font = .systemFont(ofSize: 13, weight: .semibold)
+        etiqueta.textColor = .systemBlue
+        return UIBarButtonItem(customView: etiqueta)
     }
 
     private func construirCabecera() -> UIView {

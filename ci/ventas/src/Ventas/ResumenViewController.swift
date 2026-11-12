@@ -79,7 +79,7 @@ class ResumenViewController: UIViewController {
         let rol = EtiquetaColor(texto: usuario?.rol ?? "", color: .systemPurple)
         let filaSaludo = UIStackView(arrangedSubviews: [saludo, rol])
         filaSaludo.alignment = .center
-        saludo.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        filaSaludo.distribution = .equalSpacing
         let cabecera = UIStackView(arrangedSubviews: [fecha, filaSaludo])
         cabecera.axis = .vertical
         cabecera.spacing = 2

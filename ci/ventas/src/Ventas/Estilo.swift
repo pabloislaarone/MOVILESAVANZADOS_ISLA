@@ -15,6 +15,8 @@ final class EtiquetaColor: UILabel {
         layer.cornerRadius = 8
         layer.masksToBounds = true
         textAlignment = .center
+        setContentHuggingPriority(.required, for: .horizontal)
+        setContentCompressionResistancePriority(.required, for: .horizontal)
         configurar(texto: texto, color: color)
     }
 
@@ -191,15 +193,6 @@ enum Estilo {
         v.backgroundColor = .secondarySystemGroupedBackground
         v.layer.cornerRadius = 14
         return v
-    }
-
-    // Botón de la barra con las iniciales del usuario de la sesión
-    static func botonIniciales() -> UIBarButtonItem {
-        let etiqueta = UILabel()
-        etiqueta.text = Estilo.iniciales(Sesion.shared.usuario?.nombre ?? "")
-        etiqueta.font = .systemFont(ofSize: 13, weight: .semibold)
-        etiqueta.textColor = .systemBlue
-        return UIBarButtonItem(customView: etiqueta)
     }
 
     static func texto(_ valor: String, tamano: CGFloat = 15, peso: UIFont.Weight = .regular, color: UIColor = .label) -> UILabel {

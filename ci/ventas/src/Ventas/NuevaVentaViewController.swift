@@ -16,7 +16,7 @@ class NuevaVentaViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Nueva venta"
+        navigationItem.title = "Nueva venta" // title cambiaría también el nombre de la pestaña
         tableView.keyboardDismissMode = .onDrag
 
         stepper.minimumValue = 1
@@ -31,6 +31,10 @@ class NuevaVentaViewController: UITableViewController {
         campoCantidad.accessibilityIdentifier = "cantidad"
         campoCantidad.widthAnchor.constraint(equalToConstant: 44).isActive = true
         campoCantidad.addTarget(self, action: #selector(cambioCampo), for: .editingChanged)
+        // Al tocar la cantidad se selecciona el número para reemplazarlo de una vez
+        campoCantidad.addAction(UIAction { [weak self] _ in
+            DispatchQueue.main.async { self?.campoCantidad.selectAll(nil) }
+        }, for: .editingDidBegin)
 
         // Barra sobre el teclado numérico con el botón Listo
         let barra = UIToolbar()

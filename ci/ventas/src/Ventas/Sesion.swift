@@ -1,10 +1,5 @@
 import UIKit
 
-enum Rol {
-    static let vendedor = "Vendedor"
-    static let supervisor = "Supervisor"
-}
-
 // Sesión: un único objeto compartido que recuerda al usuario conectado mientras la app está abierta
 final class Sesion {
     static let shared = Sesion()
