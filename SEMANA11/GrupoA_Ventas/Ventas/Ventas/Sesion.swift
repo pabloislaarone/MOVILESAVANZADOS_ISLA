@@ -34,7 +34,7 @@ enum Navegacion {
 
     static func irALaApp() {
         guard let usuario = Sesion.shared.usuario else { return }
-        cambiarRaiz(UINavigationController(rootViewController: UIViewController()))
+        cambiarRaiz(MainTabBarController(usuario: usuario))
     }
 
     private static func cambiarRaiz(_ vc: UIViewController) {
