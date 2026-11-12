@@ -12,13 +12,13 @@ class MainTabBarController: UITabBarController {
             viewControllers = [
                 pestana(UIViewController(), "Resumen", "chart.bar.fill"),
                 pestana(UIViewController(), "Ventas", "list.bullet.rectangle.fill"),
-                pestana(UIViewController(), "Productos", "shippingbox.fill"),
+                pestana(ProductosViewController(), "Productos", "shippingbox.fill"),
                 pestana(UIViewController(), "Clientes", "person.2.fill"),
                 pestana(CuentaViewController(), "Cuenta", "person.crop.circle.fill")
             ]
         } else {
             viewControllers = [
-                pestana(UIViewController(), "Productos", "shippingbox.fill"),
+                pestana(ProductosViewController(), "Productos", "shippingbox.fill"),
                 pestana(UIViewController(), "Clientes", "person.2.fill"),
                 pestana(UIViewController(), "Venta", "cart.fill.badge.plus"),
                 pestana(UIViewController(), "Mis ventas", "list.bullet.rectangle.fill"),
