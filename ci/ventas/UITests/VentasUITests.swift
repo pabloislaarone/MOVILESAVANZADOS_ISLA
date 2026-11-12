@@ -24,6 +24,14 @@ final class VentasUITests: XCTestCase {
     }
 
     @MainActor
+    func cerrarGuardarClave() {
+        for b in ["Not Now", "Ahora no", "Never for This Website"] {
+            let boton = app.buttons[b]
+            if boton.waitForExistence(timeout: 1) { boton.tap(); sleep(1); return }
+        }
+    }
+
+    @MainActor
     func ocultarTeclado() {
         guard app.keyboards.count > 0 else { return }
         let listo = app.toolbars.buttons["Listo"]
@@ -50,6 +58,7 @@ final class VentasUITests: XCTestCase {
         escribir(app.secureTextFields["loginClave"], clave, limpiar: true)
         ocultarTeclado()
         app.buttons["Ingresar"].tap()
+        cerrarGuardarClave()
     }
 
     @MainActor
@@ -114,6 +123,7 @@ final class VentasUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["✓ Disponible"].exists)
         captura("03_A2_registro_lparedes")
         app.buttons["Registrarme"].tap()
+        cerrarGuardarClave()
         XCTAssertTrue(app.tabBars.buttons["Resumen"].waitForExistence(timeout: 8), "El supervisor no entró a la app")
         captura("04_caso1_entra_supervisor")
 
@@ -129,6 +139,7 @@ final class VentasUITests: XCTestCase {
         escribir(app.secureTextFields["regConfirmar"], "123456")
         ocultarTeclado()
         app.buttons["Registrarme"].tap()
+        cerrarGuardarClave()
         XCTAssertTrue(app.staticTexts["✗ Ya existe"].exists)
         XCTAssertFalse(app.tabBars.firstMatch.exists)
         captura("06_caso1_usuario_repetido")
@@ -139,12 +150,14 @@ final class VentasUITests: XCTestCase {
         escribir(app.secureTextFields["regConfirmar"], "1234", limpiar: true)
         ocultarTeclado()
         app.buttons["Registrarme"].tap()
+        cerrarGuardarClave()
         XCTAssertTrue(app.staticTexts["La clave debe tener mínimo 6 caracteres."].exists)
         captura("07_caso2_clave_corta")
         escribir(app.secureTextFields["regClave"], "123456", limpiar: true)
         escribir(app.secureTextFields["regConfirmar"], "654321", limpiar: true)
         ocultarTeclado()
         app.buttons["Registrarme"].tap()
+        cerrarGuardarClave()
         XCTAssertTrue(app.staticTexts["Las claves no coinciden."].exists)
         captura("08_caso2_claves_distintas")
         app.navigationBars.buttons["Ingresar"].tap()

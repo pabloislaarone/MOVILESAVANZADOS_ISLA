@@ -157,7 +157,8 @@ enum Estilo {
         campo.accessibilityIdentifier = id
         campo.returnKeyType = .done
         campo.addAction(UIAction { _ in }, for: .editingDidEndOnExit) // la tecla Listo cierra el teclado
-        if seguro { campo.textContentType = .oneTimeCode } // evita el autollenado de contraseñas en el simulador
+        // Sin autollenado de contraseñas: así iOS no ofrece "Guardar contraseña" (es una práctica)
+        campo.textContentType = .oneTimeCode
 
         let pila = UIStackView(arrangedSubviews: [etiqueta, campo])
         pila.axis = .vertical
