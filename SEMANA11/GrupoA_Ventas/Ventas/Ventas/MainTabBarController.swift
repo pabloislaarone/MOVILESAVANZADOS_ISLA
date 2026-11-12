@@ -10,7 +10,7 @@ class MainTabBarController: UITabBarController {
 
         if usuario.esSupervisor {
             viewControllers = [
-                pestana(UIViewController(), "Resumen", "chart.bar.fill"),
+                pestana(ResumenViewController(), "Resumen", "chart.bar.fill"),
                 pestana(VentasViewController(modo: .equipo), "Ventas", "list.bullet.rectangle.fill"),
                 pestana(ProductosViewController(), "Productos", "shippingbox.fill"),
                 pestana(ClientesViewController(), "Clientes", "person.2.fill"),
